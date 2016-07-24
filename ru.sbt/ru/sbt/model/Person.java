@@ -28,7 +28,7 @@ public class Person {
      * @return - returns new Person object with changed name field
      */
     public Person identification(String name) {
-        return new Person(this.personGender, name);
+        return new Person(this.getPersonGender(), name);
     }
 
     /**
@@ -37,9 +37,9 @@ public class Person {
      */
     public void personBio() {
         StringBuilder bio = new StringBuilder();
-        bio.append("Bio: ").append(this.personName).append(" (");
-        char genderID = (this.personGender == Gender.MALE) ? 'M' : 'F';
-        String status = (this.spouse != null ? "married on " + this.spouse.getPersonName() : "not married");
+        bio.append("Bio: ").append(this.getPersonName()).append(" (");
+        char genderID = (this.getPersonGender() == Gender.MALE) ? 'M' : 'F';
+        String status = (this.getSpouse() != null ? "married on " + this.getSpouse().getPersonName() : "not married");
         bio.append(genderID).append(") ").append(status);
         System.out.println(bio.toString());
     }
@@ -53,12 +53,12 @@ public class Person {
      */
     public boolean marry(Person person) {
         boolean marriage = false;
-        if (this.personGender != person.personGender) {
-            if ((this.spouse == null) && (person.spouse == null)) {
+        if (this.getPersonGender() != person.getPersonGender()) {
+            if ((this.getSpouse() == null) && (person.getSpouse() == null)) {
                 this.spouse = person;
                 person.spouse = this;
                 marriage = true;
-            } else if ((this.spouse != person) && (person.spouse != this)) {
+            } else if ((this.getSpouse() != person) && (person.getSpouse() != this)) {
                 this.divorce();
                 person.divorce();
                 return this.marry(person);
@@ -74,7 +74,7 @@ public class Person {
      */
     public boolean divorce() {
         boolean status = false;
-        if ((this.spouse != null) && (this.spouse.spouse != null)) {
+        if ((this.getSpouse() != null) && (this.getSpouse().getSpouse() != null)) {
             this.spouse.spouse = null;
             this.spouse = null;
             status = true;
