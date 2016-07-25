@@ -3,11 +3,12 @@ package ru.sbt.model;
 public class Person {
     private final Gender personGender;
     private final String personName;
-    private Person spouse;
+    private final Person spouse;
 
-    public Person(Gender gender, String name, Person spouse) {
-        this(gender, name);
-        this.marry(spouse);
+    private Person(Gender gender, String name, Person spouse) {
+        this.personGender = gender;
+        this.personName = name;
+        this.spouse = spouse;
     }
 
     public Person(Gender gender, String name) {
@@ -19,6 +20,7 @@ public class Person {
     public Person() {
         this.personGender = Gender.MALE;
         this.personName = "Anonymous";
+        this.spouse = null;
     }
 
     /**
@@ -28,7 +30,7 @@ public class Person {
      * @return - returns new Person object with changed name field
      */
     public Person identification(String name) {
-        return new Person(this.getPersonGender(), name);
+        return new Person(this.getPersonGender(), name, this.getSpouse());
     }
 
     /**
@@ -82,15 +84,15 @@ public class Person {
         return status;
     }
 
-    public Gender getPersonGender() {
+    private Gender getPersonGender() {
         return personGender;
     }
 
-    public String getPersonName() {
+    private String getPersonName() {
         return personName;
     }
 
-    public Person getSpouse() {
+    private Person getSpouse() {
         return spouse;
     }
 }

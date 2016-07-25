@@ -5,8 +5,8 @@ public class Family {
     public static void main(String[] args) {
         Person husband = new Person();
         Person wife = new Person(Gender.FEEMALE, "Mary");
-        Person husband2 = new Person(Gender.MALE, "Peter", new Person(Gender.FEEMALE, "Chloe"));
-        Person wife2 = husband2.getSpouse();
+        Person husband2 = new Person(Gender.MALE, "Peter");
+        Person wife2 = new Person(Gender.FEEMALE, "Chloe");
         husband = husband.identification("Michael");
 
         System.out.println("\nFirst year:");
