@@ -6,14 +6,14 @@ public class Person {
     private Person spouse;
 
     public Person(Gender gender, String name, Person spouse) {
-        this.personGender = gender;
-        this.personName = name;
+        this(gender, name);
         this.marry(spouse);
     }
 
     public Person(Gender gender, String name) {
         this.personGender = gender;
         this.personName = name;
+        this.spouse = null;
     }
 
     public Person() {

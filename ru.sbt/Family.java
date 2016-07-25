@@ -28,5 +28,12 @@ public class Family {
         wife.personBio();
         husband2.personBio();
         wife2.personBio();
+        wife.divorce();
+
+        System.out.println("\nFour year:");
+        husband.personBio();
+        wife.personBio();
+        husband2.personBio();
+        wife2.personBio();
     }
 }
