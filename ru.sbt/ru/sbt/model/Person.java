@@ -1,5 +1,8 @@
 package ru.sbt.model;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 public class Person {
     private final Gender personGender;
     private final String personName;
@@ -51,19 +54,21 @@ public class Person {
      * If one of them has another spouse - execute divorce(sets spouse = null for husband and wife. Example: if both persons have spouses - then divorce will set 4 spouse to null) and then executes marry().
      *
      * @param person - new husband/wife for this person.
-     * @return - returns true if this person has another gender than passed person and they are not husband and wife, false otherwise
+     * @return - returns list of persons with updates statuses
      */
-    public boolean marry(Person person) {
-        boolean marriage = false;
+    public ArrayList<Person> marry(Person person) {
+        ArrayList<Person> marriage = new ArrayList<>();
         if (this.getPersonGender() != person.getPersonGender()) {
             if ((this.getSpouse() == null) && (person.getSpouse() == null)) {
-                this.spouse = person;
-                person.spouse = this;
-                marriage = true;
-            } else if ((this.getSpouse() != person) && (person.getSpouse() != this)) {
-                this.divorce();
-                person.divorce();
-                return this.marry(person);
+                marriage.add(new Person(this.getPersonGender(), this.getPersonName(), person));
+                marriage.add(new Person(person.getPersonGender(), person.getPersonName(), this));
+                marriage = this.updateList(marriage);
+            } else if ((this.getSpouse() != null) || (person.getSpouse() != null)) {
+                marriage.addAll(this.divorce());
+                marriage.addAll(person.divorce());
+                marriage.add(new Person(this.getPersonGender(), this.getPersonName(), person));
+                marriage.add(new Person(person.getPersonGender(), person.getPersonName(), this));
+                marriage = this.updateList(marriage);
             }
         }
         return marriage;
@@ -72,27 +77,52 @@ public class Person {
     /**
      * Sets spouse = null if spouse is not null
      *
-     * @return true - if person status has been changed
+     * @return ArrayList<Person> - list of persons whose status has been changed
      */
-    public boolean divorce() {
-        boolean status = false;
-        if ((this.getSpouse() != null) && (this.getSpouse().getSpouse() != null)) {
-            this.spouse.spouse = null;
-            this.spouse = null;
-            status = true;
+    public ArrayList<Person> divorce() {
+        ArrayList<Person> divorces = new ArrayList<>();
+        if ((this.getSpouse() != null)) {
+            divorces.add(new Person(this.getSpouse().getPersonGender(), this.getSpouse().getPersonName()));
+            divorces.add(new Person(this.getPersonGender(), this.getPersonName()));
+            divorces = this.updateList(divorces);
         }
-        return status;
+        return divorces;
     }
 
-    private Gender getPersonGender() {
+    /**
+     * This method removes duplicates in person list
+     *
+     * @return ArrayList<Person> - list of persons without duplicates
+     */
+    public ArrayList<Person> updateList(ArrayList<Person> checkList) {
+        ArrayList<Person> result = new ArrayList<>();
+        boolean exists = false;
+        for (int i = checkList.size() - 1; i >= 0; i--) {
+            if ((result.size() == 0) && (!Objects.equals(checkList.get(i).getPersonName(), "Anonymous"))) {
+                result.add(checkList.get(i));
+            } else {
+                for (Person comparing : result) {
+                    if (Objects.equals(comparing.getPersonName(), checkList.get(i).getPersonName())) {
+                        exists = true;
+                    }
+                }
+                if ((!exists) && (!Objects.equals(checkList.get(i).getPersonName(), "Anonymous"))) {
+                    result.add(checkList.get(i));
+                } else exists = false;
+            }
+        }
+        return result;
+    }
+
+    public Gender getPersonGender() {
         return personGender;
     }
 
-    private String getPersonName() {
+    public String getPersonName() {
         return personName;
     }
 
-    private Person getSpouse() {
+    public Person getSpouse() {
         return spouse;
     }
 }
